@@ -16,6 +16,9 @@ import {
   CloudSun,
   ClipboardList
 } from 'lucide-react';
+import { getApiUrl } from '@/utils/api';
+
+const apiURL = getApiUrl();
 
 interface Activity {
   _id?: string;
@@ -94,7 +97,6 @@ export default function Dashboard() {
   const fetchUserTrips = async () => {
     try {
       const token = localStorage.getItem('token');
-      const apiURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
       const res = await fetch(`${apiURL}/api/trips`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -136,7 +138,6 @@ export default function Dashboard() {
     setActionLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const apiURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
       const res = await fetch(`${apiURL}/api/trips`, {
         method: 'POST',
         headers: {
@@ -186,7 +187,6 @@ export default function Dashboard() {
 
     try {
       const token = localStorage.getItem('token');
-      const apiURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
       const res = await fetch(`${apiURL}/api/trips/${selectedTrip._id}`, {
         method: 'PUT',
         headers: {
@@ -224,7 +224,6 @@ export default function Dashboard() {
 
     try {
       const token = localStorage.getItem('token');
-      const apiURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
       const res = await fetch(`${apiURL}/api/trips/${selectedTrip._id}`, {
         method: 'PUT',
         headers: {
@@ -257,7 +256,6 @@ export default function Dashboard() {
 
     try {
       const token = localStorage.getItem('token');
-      const apiURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
       const res = await fetch(`${apiURL}/api/trips/${selectedTrip._id}`, {
         method: 'PUT',
         headers: {
@@ -284,7 +282,6 @@ export default function Dashboard() {
     setRegenLoadingDay(dayNumber);
     try {
       const token = localStorage.getItem('token');
-      const apiURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
       const res = await fetch(`${apiURL}/api/trips/${selectedTrip._id}/regenerate`, {
         method: 'POST',
         headers: {
@@ -318,7 +315,6 @@ export default function Dashboard() {
 
     try {
       const token = localStorage.getItem('token');
-      const apiURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
       const res = await fetch(`${apiURL}/api/trips/${tripId}`, {
         method: 'DELETE',
         headers: {
@@ -367,7 +363,7 @@ export default function Dashboard() {
             onClick={handleSignOut}
             className="flex items-center gap-2 bg-slate-900 border border-slate-800 hover:bg-slate-850 hover:border-slate-700 transition text-slate-300 px-4 py-2 rounded-xl text-xs font-semibold"
           >
-            <LogOut h-4 w-4 />
+            <LogOut className="h-4 w-4" />
             Sign Out
           </button>
         </div>

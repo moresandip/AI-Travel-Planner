@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { getApiUrl } from '@/utils/api';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -31,7 +32,7 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      const apiURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const apiURL = getApiUrl();
       const res = await fetch(`${apiURL}/api/auth/register`, {
         method: 'POST',
         headers: {
