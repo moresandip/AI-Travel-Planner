@@ -20,6 +20,7 @@ dist/
 build/
 bin/
 obj/
+backend/public/
 
 # Logs
 npm-debug.log*
