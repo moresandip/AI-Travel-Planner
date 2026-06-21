@@ -23,6 +23,93 @@ async function fetchWithRetry(url, options, retries = 5, delay = 1000) {
   }
 }
 
+// Normalizes and validates external API outputs to prevent Mongoose schema validation crashes
+function normalizeTripData(data) {
+  if (!data) return data;
+
+  const validTimes = ['Morning', 'Afternoon', 'Evening'];
+  const validCategories = ['Documents', 'Clothing', 'Gear', 'Other'];
+
+  // Normalize itinerary day activities
+  if (Array.isArray(data.itinerary)) {
+    data.itinerary.forEach(day => {
+      if (Array.isArray(day.activities)) {
+        day.activities.forEach(act => {
+          // Normalize timeOfDay
+          if (!act.timeOfDay) {
+            act.timeOfDay = 'Morning';
+          } else {
+            const timeLower = act.timeOfDay.toLowerCase();
+            if (timeLower.includes('morning')) {
+              act.timeOfDay = 'Morning';
+            } else if (timeLower.includes('afternoon')) {
+              act.timeOfDay = 'Afternoon';
+            } else if (timeLower.includes('evening') || timeLower.includes('night')) {
+              act.timeOfDay = 'Evening';
+            } else {
+              act.timeOfDay = 'Morning'; // default fallback
+            }
+          }
+          // Ensure estimatedCostUSD is a number
+          if (act.estimatedCostUSD !== undefined) {
+            act.estimatedCostUSD = Number(act.estimatedCostUSD) || 0;
+          }
+        });
+      }
+    });
+  }
+
+  // Normalize packingList items
+  if (Array.isArray(data.packingList)) {
+    data.packingList.forEach(item => {
+      // Normalize category
+      if (!item.category) {
+        item.category = 'Other';
+      } else {
+        const catLower = item.category.toLowerCase();
+        if (catLower.includes('document')) {
+          item.category = 'Documents';
+        } else if (catLower.includes('cloth')) {
+          item.category = 'Clothing';
+        } else if (catLower.includes('gear')) {
+          item.category = 'Gear';
+        } else {
+          item.category = 'Other'; // map unknown categories to 'Other' instead of failing validation
+        }
+      }
+      // Ensure isPacked is boolean
+      item.isPacked = Boolean(item.isPacked);
+    });
+  }
+
+  return data;
+}
+
+// Normalizes single-day activities array
+function normalizeActivities(activities) {
+  if (!Array.isArray(activities)) return [];
+  activities.forEach(act => {
+    if (!act.timeOfDay) {
+      act.timeOfDay = 'Morning';
+    } else {
+      const timeLower = act.timeOfDay.toLowerCase();
+      if (timeLower.includes('morning')) {
+        act.timeOfDay = 'Morning';
+      } else if (timeLower.includes('afternoon')) {
+        act.timeOfDay = 'Afternoon';
+      } else if (timeLower.includes('evening') || timeLower.includes('night')) {
+        act.timeOfDay = 'Evening';
+      } else {
+        act.timeOfDay = 'Morning';
+      }
+    }
+    if (act.estimatedCostUSD !== undefined) {
+      act.estimatedCostUSD = Number(act.estimatedCostUSD) || 0;
+    }
+  });
+  return activities;
+}
+
 // Fallback Mock Itinerary Generator
 function generateMockItinerary(destination, durationDays, budgetTier, interests) {
   const itinerary = [];
@@ -193,6 +280,8 @@ exports.generateNewTrip = async (req, res) => {
       cleanResult = JSON.parse(parsedResponseText);
     }
 
+    cleanResult = normalizeTripData(cleanResult);
+
     // Save user isolated trip directly into MongoDB
     const newTrip = new Trip({
       userId,
@@ -291,8 +380,9 @@ exports.regenerateDay = async (req, res) => {
     return res.status(400).json({ message: 'dayNumber and instruction are required' });
   }
 
+  let trip;
   try {
-    const trip = await Trip.findOne({ _id: id, userId: req.user.id });
+    trip = await Trip.findOne({ _id: id, userId: req.user.id });
     if (!trip) {
       return res.status(404).json({ message: 'Trip not found or unauthorized' });
     }
@@ -352,6 +442,10 @@ exports.regenerateDay = async (req, res) => {
       }
 
       cleanResult = JSON.parse(parsedResponseText);
+    }
+
+    if (cleanResult.activities) {
+      cleanResult.activities = normalizeActivities(cleanResult.activities);
     }
 
     // Update the specific day's activities in itinerary
