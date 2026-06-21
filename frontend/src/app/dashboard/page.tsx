@@ -88,6 +88,7 @@ export default function Dashboard() {
       return;
     }
     fetchUserTrips();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   const fetchUserTrips = async () => {
@@ -505,7 +506,7 @@ export default function Dashboard() {
                       {/* Day Regeneration Inputs */}
                       {regenDay === day.dayNumber && (
                         <div className="bg-slate-950 border border-slate-850 p-4 rounded-xl mb-4 space-y-3">
-                          <p className="text-xs text-slate-400">Instruct AI on how to modify Day {day.dayNumber}'s itinerary:</p>
+                          <p className="text-xs text-slate-400">Instruct AI on how to modify Day {day.dayNumber}&apos;s itinerary:</p>
                           <div className="flex gap-2">
                             <input
                               type="text"

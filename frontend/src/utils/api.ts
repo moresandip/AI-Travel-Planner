@@ -4,7 +4,7 @@ interface RequestOptions extends RequestInit {
   headers?: Record<string, string>;
 }
 
-export async function apiRequest<T = any>(endpoint: string, options: RequestOptions = {}): Promise<T> {
+export async function apiRequest<T = unknown>(endpoint: string, options: RequestOptions = {}): Promise<T> {
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
   
   const headers: Record<string, string> = {

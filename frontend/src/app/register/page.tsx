@@ -48,8 +48,8 @@ export default function RegisterPage() {
       localStorage.setItem('token', data.token);
       localStorage.setItem('userEmail', data.user.email);
       router.push('/dashboard');
-    } catch (err: any) {
-      setError(err.message || 'Something went wrong');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setLoading(false);
     }
