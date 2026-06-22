@@ -13,7 +13,7 @@ export default function Home() {
       <header className="relative z-10 max-w-7xl mx-auto w-full px-6 py-6 flex justify-between items-center border-b border-slate-900">
         <div className="flex items-center gap-2">
           <span className="text-2xl">✈️</span>
-          <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">
+          <span className="text-xl font-bold tracking-tight text-blue-400">
             AI Travel Planner
           </span>
         </div>
@@ -39,9 +39,9 @@ export default function Home() {
           <div className="inline-flex items-center gap-2 bg-slate-900/80 border border-slate-800 rounded-full px-4 py-1.5 text-xs text-indigo-400 font-semibold backdrop-blur-md">
             <span>✨</span> Powered by Gemini 2.5 Flash
           </div>
-          <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight leading-none bg-gradient-to-br from-white via-slate-100 to-slate-500 bg-clip-text text-transparent">
+          <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight leading-none text-white">
             Your Next Adventure,<br />
-            <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 bg-clip-text">
+            <span className="text-indigo-400">
               Crafted by AI
             </span>
           </h1>

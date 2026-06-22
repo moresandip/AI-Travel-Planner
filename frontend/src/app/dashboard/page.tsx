@@ -353,7 +353,7 @@ export default function Dashboard() {
           <div className="flex items-center gap-3">
             <span className="text-2xl">✈️</span>
             <div>
-              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">
+              <h1 className="text-xl font-bold text-blue-400">
                 AI Travel Dashboard
               </h1>
               <p className="text-[10px] uppercase tracking-wider text-indigo-400 font-mono">User Data Enclave Protected</p>
